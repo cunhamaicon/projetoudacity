@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Aug 23 08:06:15 2018
-
-@author: maico
-
 O programa foi feito no python3
 
 Baseado em uma lista de frases o jogador tem que acertar os espaços em branco
