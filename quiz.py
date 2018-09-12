@@ -82,6 +82,19 @@ frases_brutas=     ["A César o que é de César, a Deus o que é de Deus.",
 #armazena o numero de frases
 numerofrases=len(frases_brutas)
 
+#numero espacos em branco
+
+numero_espacos=[2,3,4,5,6]
+
+#tamanhos de frases
+tamanhos_de_frases=[3,4,5,6,7]
+
+#numero de tentativas de um nivel
+tentativas_de_nivel=[3,2,1]
+
+#pontuação de nivel
+pontuacao_nivel=[1,3,5]
+
 #cria uma lista onde são armazenadas as frases do jogo
 frases_do_jogo=[]
 
@@ -89,7 +102,9 @@ def verificapontuacao(palavra):
     """ Dada uma palavra retorna True se a palavra contém pontuação
     ou False caso contrário.    
     """
-    if ((palavra[-1]==",")or(palavra[-1]=="."))or (palavra[-1]==";"):
+    ultimo_simbolo=palavra[-1]
+    
+    if ((ultimo_simbolo==",")or(ultimo_simbolo=="."))or (ultimo_simbolo==";"):
         return True
     return False 
 
@@ -134,9 +149,12 @@ def instrucoes():
     print("A escolha dos níveis também pode deixar mais espaços em branco!")
     print("Fácil são dois, médio é de dois a três e difícil é de três à seis espaços!")
     print("")
-    print("Cada frase acertada no nível difícil acumula 5 pontos!")
-    print("Cada frase acertada no nível médio acumula 3 pontos!")
-    print("Cada frase acertada no nível fácil acumula 1 ponto!")
+    print("Cada frase acertada no nível difícil acumula {} pontos!"\
+          .format(pontuacao_nivel[2]))
+    print("Cada frase acertada no nível médio acumula {} pontos!"\
+          .format(pontuacao_nivel[1]))
+    print("Cada frase acertada no nível fácil acumula {} ponto!"\
+          .format(pontuacao_nivel[0]))
     print("Pense nas suas escolhas e boa sorte!!")
     print("")
     
@@ -153,11 +171,13 @@ def selecionar_nivel():
     assim que o jogo é iniciado"""
     
     print("")
-    nivel=input("Escolha um nível: fácil(f), médio(m), difícil(d): ").lower()
+    nivel=input("Escolha um nível: fácil({}), médio({}), difícil({}): "\
+                .format(niveis[0],niveis[1],niveis[2]).lower())
         
     while nivel not in niveis :
         print("Digite um nível válido...")
-        nivel=input("Escolha um nível: fácil(f), médio(m), difícil(d): ").lower()
+        nivel=input("Escolha um nível: fácil({}), médio({}), difícil({}): ".\
+                    format(niveis[0],niveis[1],niveis[2])).lower()
             
     return nivel
 
@@ -193,22 +213,23 @@ def calculanumerosubstituicoes(nivel,frase,tamanhofrase):
     requer poucas substituições. Um nível difícil requer muitas substituições.
     """    
     
-    if nivel == "f":
-        return 2
-    if nivel == "m":
-        if tamanhofrase>=5:
-            return 3
+    
+    if nivel == niveis[0]:
+        return numero_espacos[0]
+    if nivel == niveis[1]:
+        if tamanhofrase>=tamanhos_de_frases[2]:
+            return numero_espacos[1]
         else:
-            return 2
+            return numero_espacos[0]
     if nivel == "d":
-        if tamanhofrase> 7:
-            return 6
-        if tamanhofrase>6:
-            return 5
-        elif tamanhofrase>5:
-            return 4
-        elif tamanhofrase<=5:
-            return 3
+        if tamanhofrase> tamanhos_de_frases[4]:
+            return numero_espacos[4]
+        if tamanhofrase>tamanhos_de_frases[3]:
+            return numero_espacos[3]
+        elif tamanhofrase>tamanhos_de_frases[2]:
+            return numero_espacos[2]
+        elif tamanhofrase<=tamanhos_de_frases[2]:
+            return numero_espacos[1]
 
 
 def procuraposicaosubstituicao(tamanho, numero):
@@ -270,20 +291,23 @@ def numerodetentativas(dificuldade):
     """De acordo com o nível de dificuldade retorna o número de tentativas possíveis
      de acerto de uma palavra.
     """
-    if dificuldade=="f":
-        return 3
-    if dificuldade =="m":
-        return 2
-    if dificuldade =="d":
-        return  1   
+    if dificuldade==niveis[0]:
+        return tentativas_de_nivel[0]
+    if dificuldade ==niveis[1]:
+        return tentativas_de_nivel[1]
+    if dificuldade ==niveis[2]:
+        return  tentativas_de_nivel[2]   
  
        
 def jogarodada(listaposicao,dificuldade,frasecomespaco,fraserodada,numerosubstituicao):
     
     """ Fase da rodada do jogo, mostra a palavra com espacos em branco,
-    o jogador entra com a palavra e o programa verifica se acertou ou não, caso tenha acertado
-    a palavra imprime a nova frase e continua para a proxima. Caso nao tenha acertado imprime a 
-    frase original e repete o processo. Faz isso ate esgotar o numero de tentativas ou acertar
+    o jogador entra com a palavra e o programa verifica se acertou ou não,\
+    caso tenha acertado
+    a palavra imprime a nova frase e continua para a proxima. \
+    Caso nao tenha acertado imprime a 
+    frase original e repete o processo. Faz isso ate esgotar o numero de \
+    tentativas ou acertar
     a frase inteira.    
     """
 
@@ -314,18 +338,19 @@ def jogarodada(listaposicao,dificuldade,frasecomespaco,fraserodada,numerosubstit
     
 def resultadorodada(lista1,lista2,indice,dificuldade,pontuacao):
     """Compara duas listas de palavras, se as listas são iguais entao acertou.
-    Se são diferentes errou. Retorna a pontuação depois de uma rodada e se acertou ou não a frase.
+    Se são diferentes errou. Retorna a pontuação depois de uma rodada\
+    e se acertou ou não a frase.
     """
     
     if lista1 == lista2:
         print("")
         print("Parabéns, você acertou a frase: ")
-        if dificuldade =="f":
-            pontuacao+=1
-        if dificuldade =="m":
-            pontuacao+=3
-        if dificuldade == "d":
-            pontuacao+=5
+        if dificuldade ==niveis[0]:
+            pontuacao+=pontuacao_nivel[0]
+        if dificuldade ==niveis[1]:
+            pontuacao+=pontuacao_nivel[1]
+        if dificuldade == niveis[2]:
+            pontuacao+=pontuacao_nivel[2]
         print(frases_brutas[indice])
         return pontuacao,True
     else:
@@ -337,16 +362,21 @@ def resultadorodada(lista1,lista2,indice,dificuldade,pontuacao):
 
 def mostrapontuacao(teste):
     """Recebe os pontos do jogo que tem duas entradas, a primeira com a pontução,
-    e a segunda indicando se errou ou não a frase. Caso não tenha errado a frase imprime os pontos do 
+    e a segunda indicando se errou ou não a frase. Caso não tenha errado a \
+    frase imprime os pontos do 
     jogo. Caso tenha errado a frase não faz nada.
     """
-    if teste[1]:
-        print("Você marcou: {} pontos até agora!".format(teste[0]))
+    condicao_continuar=teste[1]
+    pontosmostrar=teste[0]
+    
+    if condicao_continuar:
+        print("Você marcou: {} pontos até agora!".format(pontosmostrar))
         print("")
 
 def jogarnovamente(testeterminou):
     """Se errou a frase retorna falso. 
-    Se acertou dependendo da entrada do usuario retorna Falso ou verdadeiro. Se não digitar nada retorna 
+    Se acertou dependendo da entrada do usuario retorna Falso ou verdadeiro. \
+    Se não digitar nada retorna 
     verdadeiro. Caso contrário retorna falso.
     """
     if testeterminou:
@@ -370,7 +400,9 @@ def iniciajogo():
     Desenvolve todo o jogo.
     """
     instrucoes()
-    pontos_do_jogo=[0,True]
+    condicao_continuajogo=True
+    pontuacao=0
+    pontos_do_jogo=[pontuacao,condicao_continuajogo]
     jogar_de_novo=True
     frases_do_jogo=frasesemlista(frases_brutas)
     frases_do_jogo=frasesemlistasemponto(frases_do_jogo)
@@ -389,11 +421,15 @@ def iniciajogo():
         imprime("Sua frase é:")
         imprimedelista(frase_com_espacos)
         frase_jogada=jogarodada(posicao_substituicao,nivel_do_jogo,frase_com_espacos,frase_da_rodada,numero_substituicoes)
-        pontos_do_jogo=resultadorodada(frase_da_rodada,frase_jogada,indice_frase_rodada, nivel_do_jogo,pontos_do_jogo[0])
+        pontos_do_jogo=resultadorodada(frase_da_rodada,frase_jogada,indice_frase_rodada, nivel_do_jogo,pontuacao)
         mostrapontuacao(pontos_do_jogo)
+        pontuacao=pontos_do_jogo[0]
         jogar_de_novo= jogarnovamente(pontos_do_jogo[1])
         
-    fimdejogo(nome_jogador,pontos_do_jogo[0])
+    fimdejogo(nome_jogador,pontuacao)
+        
+    
     
 #chama o começo de um jogo
 iniciajogo()
+
