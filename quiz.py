@@ -221,7 +221,7 @@ def calculanumerosubstituicoes(nivel,frase,tamanhofrase):
             return numero_espacos[1]
         else:
             return numero_espacos[0]
-    if nivel == "d":
+    if nivel == niveis[2]:
         if tamanhofrase> tamanhos_de_frases[4]:
             return numero_espacos[4]
         if tamanhofrase>tamanhos_de_frases[3]:
